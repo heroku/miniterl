@@ -1,9 +1,8 @@
-{application, terlex,
+{application, miniterl,
  [{description, "A Telex client for Erlang."}
  ,{vsn, "0.1.0"}
  ,{registered, []}
- ,{applications,
-    [kernel,stdlib]}
+ ,{applications, [kernel, stdlib, hackney, jsx]}
  ,{env,[]}
  ,{modules, []}
  ]}.
