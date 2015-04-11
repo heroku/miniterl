@@ -20,34 +20,34 @@
 %%====================================================================
 
 -spec notify_app(url(), app_id(), title(), body()) -> {ok, message_id()} | {error, term()}.
-notify_app(BaseURL, AppID, Title, Body) ->
-    notify_app(BaseURL, AppID, Title, Body, undefined).
+notify_app(URL, AppID, Title, Body) ->
+    notify_app(URL, AppID, Title, Body, undefined).
 -spec notify_app(url(), app_id(), title(), body(), action()) -> {ok, message_id()} | {error, term()}.
-notify_app(BaseURL, AppID, Title, Body, Action) ->
-    post_message(BaseURL, <<"app">>, AppID, Title, Body, Action).
+notify_app(URL, AppID, Title, Body, Action) ->
+    post_message(URL, <<"app">>, AppID, Title, Body, Action).
 
 -spec notify_user(url(), user_id(), title(), body()) -> {ok, message_id()} | {error, term()}.
-notify_user(BaseURL, UserID, Title, Body) ->
-    notify_user(BaseURL, UserID, Title, Body, undefined).
+notify_user(URL, UserID, Title, Body) ->
+    notify_user(URL, UserID, Title, Body, undefined).
 -spec notify_user(url(), user_id(), title(), body(), action()) -> {ok, message_id()} | {error, term()}.
-notify_user(BaseURL, UserID, Title, Body, Action) ->
-    post_message(BaseURL, <<"user">>, UserID, Title, Body, Action).
+notify_user(URL, UserID, Title, Body, Action) ->
+    post_message(URL, <<"user">>, UserID, Title, Body, Action).
 
 -spec add_followup(url(), message_id(), body()) -> {ok, message_id()} | {error, term()}.
-add_followup(BaseURL, MessageID, Body) ->
+add_followup(URL, MessageID, Body) ->
     ID = binary_to_list(MessageID),
     Path = string:join(["/producer/messages/", ID, "/followups"], ""),
-    URL = hackney_url:make_url(BaseURL, list_to_binary(Path), <<"">>),
-    post(URL, [{<<"id">>, MessageID}, {<<"body">>, Body}]).
+    FullURL = hackney_url:make_url(URL, list_to_binary(Path), <<"">>),
+    post(FullURL, [{<<"id">>, MessageID}, {<<"body">>, Body}]).
 
 %%====================================================================
 %% Internal functions
 %%====================================================================
 
-post_message(BaseURL, Type, ID, Title, Body, Action) ->
+post_message(URL, Type, ID, Title, Body, Action) ->
     Message = make_message(Type, ID, Title, Body, Action),
-    URL = hackney_url:make_url(BaseURL, <<"/producer/messages">>, <<"">>),
-    post(URL, Message).
+    FullURL = hackney_url:make_url(URL, <<"/producer/messages">>, <<"">>),
+    post(FullURL, Message).
 
 post(URL, Body) ->
     Headers = [{<<"User-Agent">>, user_agent()},
