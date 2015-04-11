@@ -42,9 +42,9 @@ post(URL, Body) ->
     Payload = jsx:encode(Body),
     case hackney:request(post, URL, Headers, Payload, []) of
         {ok, 201, _, Client} ->
-            {ok, Body} = hackney:body(Client),
-            Response = jsx:decode(Body, [return_maps]),
-            {ok, maps:get(Response, <<"id">>)};
+            {ok, ResponseBody} = hackney:body(Client),
+            Result = jsx:decode(ResponseBody),
+            {ok, proplists:get_value(<<"id">>, Result)};
         {error, Reason} ->
             {error, Reason}
     end.
