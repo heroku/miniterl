@@ -4,7 +4,7 @@ A Telex client for Erlang.
 
 ## API
 
-```
+```erlang
 -type url() :: binary().
 -type app_id() :: binary().
 -type user_id() :: binary().
