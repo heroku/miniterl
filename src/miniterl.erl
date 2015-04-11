@@ -7,20 +7,33 @@
          notify_user/4,
          notify_user/5]).
 
+-type url() :: binary().
+-type app_id() :: binary().
+-type user_id() :: binary().
+-type title() :: binary().
+-type body() :: binary().
+-type action() :: undefined | #{binary() => binary()} | [{binary(), binary()}].
+-type message_id() :: binary().
+
 %%====================================================================
 %% API functions
 %%====================================================================
 
+-spec notify_app(url(), app_id(), title(), body()) -> {ok, message_id()} | {error, term()}.
 notify_app(BaseURL, AppID, Title, Body) ->
     notify_app(BaseURL, AppID, Title, Body, undefined).
+-spec notify_app(url(), app_id(), title(), body(), action()) -> {ok, message_id()} | {error, term()}.
 notify_app(BaseURL, AppID, Title, Body, Action) ->
     post_message(BaseURL, <<"app">>, AppID, Title, Body, Action).
 
+-spec notify_user(url(), user_id(), title(), body()) -> {ok, message_id()} | {error, term()}.
 notify_user(BaseURL, UserID, Title, Body) ->
     notify_user(BaseURL, UserID, Title, Body, undefined).
+-spec notify_user(url(), user_id(), title(), body(), action()) -> {ok, message_id()} | {error, term()}.
 notify_user(BaseURL, UserID, Title, Body, Action) ->
     post_message(BaseURL, <<"user">>, UserID, Title, Body, Action).
 
+-spec add_followup(url(), message_id(), body()) -> {ok, message_id()} | {error, term()}.
 add_followup(BaseURL, MessageID, Body) ->
     ID = binary_to_list(MessageID),
     Path = string:join(["/producer/messages/", ID, "/followups"], ""),
